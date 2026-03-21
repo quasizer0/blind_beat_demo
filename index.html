@@ -1,33 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-
-  <title>Blind Beat Demo</title>
-  <meta name="description" content="在黑暗中跟著節拍前進，辨識真實音源，完成 Blind Beat 的聲音導航試玩。" />
-  <meta name="theme-color" content="#05080d" />
-
-  <meta property="og:locale" content="zh_TW" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Blind Beat Demo" />
-  <meta property="og:title" content="Blind Beat Demo" />
-  <meta property="og:description" content="在黑暗中跟著節拍前進，辨識真實音源，完成 Blind Beat 的聲音導航試玩。" />
-  <meta property="og:url" content="https://quasizer0.github.io/blind_beat_demo/" />
-  <meta property="og:image" content="https://quasizer0.github.io/blind_beat_demo/preview_clean.jpg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Blind Beat Demo 預覽圖" />
-
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Blind Beat Demo" />
-  <meta name="twitter:description" content="在黑暗中跟著節拍前進，辨識真實音源，完成 Blind Beat 的聲音導航試玩。" />
-  <meta name="twitter:image" content="https://quasizer0.github.io/blind_beat_demo/preview_clean.jpg" />
-
-  <link rel="canonical" href="https://quasizer0.github.io/blind_beat_demo/" />
-
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Blind Beat Demo</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 
@@ -713,7 +689,7 @@ button[disabled],.btn[disabled]{opacity:.34; cursor:not-allowed; transform:none!
   position:relative;
   width:100%;
   display:grid;
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:repeat(3,1fr);
   gap:12px;
 }
 .result-stat{
@@ -1630,7 +1606,9 @@ body.play-mode #cursorPresence{opacity:0 !important; visibility:hidden !importan
           <div class="result-stat"><div class="k">BPM</div><div id="resultBpm" class="v">90</div></div>
           <div class="result-stat"><div class="k">進度</div><div id="resultProgress" class="v">1 / 1</div></div>
           <div class="result-stat"><div class="k">同步</div><div id="resultSync" class="v">100%</div></div>
-          <div class="result-stat"><div class="k">狀態</div><div id="resultState" class="v">穩定</div></div>
+          <div class="result-stat"><div class="k">PERFECT</div><div id="resultPerfect" class="v">0</div></div>
+          <div class="result-stat"><div class="k">GOOD</div><div id="resultGood" class="v">0</div></div>
+          <div class="result-stat"><div class="k">MISS</div><div id="resultMiss" class="v">0</div></div>
         </div>
       </div>
       <div class="result-actions">
@@ -1730,7 +1708,7 @@ const rand = (a,b)=>a + Math.random()*(b-a);
 const fmtMs = (s)=>`${s>=0?'+':''}${Math.round(s*1000)} ms`;
 
 const LEVELS = [
-  {idx:0,id:'LEVEL 0', subtitle:'節拍入門', bpm:90, track:null, footer:'90 BPM / 節拍入門', tags:[{label:'節拍入門',role:'theme',tone:'guide'},{label:'四段教學',role:'play',tone:'calm'},{label:'無威脅',role:'threat',tone:'safe'}], desc:'先聽拍、再跟拍，最後讓節拍真正帶動前進。', objective:'先聽 16 拍，再原地跟拍，最後完成四段節拍直走。', playable:true, collectGoal:4, kind:'tutorial', teach:'節拍基本概念、跟上拍、節拍與移動的關係', pressure:'幾乎不壓，只壓玩家是否願意先靜下來聽', fail:'太急著動、沒先聽拍、不懂早拍晚拍差別', thrill:'從亂打變成穩定踩拍，感覺自己真的進入節奏'},
+  {idx:0,id:'LEVEL 0', subtitle:'節拍入門', bpm:90, track:null, footer:'90 BPM / 節拍入門', tags:[{label:'先聽再拍',role:'theme',tone:'guide'},{label:'左右辨識',role:'play',tone:'calm'},{label:'無威脅',role:'threat',tone:'safe'}], desc:'先聽 16 拍，再分辨左右音源，穩定打出 GOOD 以上後接觸音源通關。', objective:'四階段教學：聽拍 16 拍 → 左右音源辨識 → 連續 GOOD → 接觸音源通關。', playable:true, collectGoal:1, kind:'tutorial', teach:'節拍基本概念、左右音源、穩定 GOOD、節拍帶動前進', pressure:'幾乎不壓，只壓玩家是否願意先靜下來聽', fail:'太急著動、沒先聽拍、不懂左右聲音、不夠穩定', thrill:'從聽拍到接觸音源，完整學會 Blind Beat 的第一個閉環'},
   {idx:1,id:'LEVEL 1', subtitle:'3D 音樂導航', bpm:103, track:'1.mp3', footer:'103 BPM / 3D 音樂導航', tags:[{label:'3D 音樂導航',role:'theme',tone:'goal'},{label:'連續追尋',role:'play',tone:'guide'},{label:'無怪物',role:'threat',tone:'safe'}], desc:'第一次只靠聲音，在黑暗裡真正找到方向。', objective:'追著真聲源前進，建立空間定位。', playable:true, collectGoal:3, kind:'hunt', goalLabel:'主聲源', threatLabel:'無怪物', teach:'往聲音方向前進，建立空間定位', pressure:'空間感與聽覺方向判斷', fail:'只顧打拍沒顧方向、亂轉視角、聽見卻不確定位置', thrill:'第一次真的靠聽音找到東西，感覺自己能在黑暗中導航'},
   {idx:2,id:'LEVEL 2', subtitle:'假回聲', bpm:102, track:'2.mp3', footer:'102 BPM / 假回聲', tags:[{label:'真假辨識',role:'theme',tone:'goal'},{label:'方向誤導',role:'play',tone:'pressure'},{label:'假回聲',role:'threat',tone:'threat'}], desc:'分清真正的聲源與陷阱，學會懷疑第一個答案。', objective:'辨識主目標，避開延遲假回聲。', playable:true, collectGoal:3, kind:'echo', goalLabel:'真音源', threatLabel:'假回聲', teach:'真聲源與假回聲不是同一件事，玩家要學會辨識與懷疑', pressure:'聽覺誤導、判斷焦慮、自我懷疑', fail:'被假回聲騙走、太慌亂而亂選、聽到一個聲音就直接相信', thrill:'分辨出這個不是真的，在混亂裡找到真正目標'},
   {idx:3,id:'LEVEL 3', subtitle:'壓力導入', bpm:110, track:'3.mp3', footer:'110 BPM / 壓力導入', tags:[{label:'穩拍壓力',role:'theme',tone:'pressure'},{label:'音場侵蝕',role:'play',tone:'distort'},{label:'節拍蛭',role:'threat',tone:'threat'}], desc:'壓力開始逼近時，節拍不只是節拍，而是保命工具。', objective:'在壓力追上來前穩住節奏與方向。', playable:true, collectGoal:3, kind:'pressure', goalLabel:'穩定節拍', threatLabel:'節拍蛭', teach:'壓力開始逼近時，仍要維持節拍與方向', pressure:'緊張感、節拍穩定性、決策速度', fail:'一緊張就亂拍、一被追就亂跑、節奏掉了後整個崩掉', thrill:'第一次感受到節拍真的是保命工具'},
@@ -1802,7 +1780,9 @@ const el = {
   resultBpm: document.getElementById('resultBpm'),
   resultProgress: document.getElementById('resultProgress'),
   resultSync: document.getElementById('resultSync'),
-  resultState: document.getElementById('resultState'),
+  resultPerfect: document.getElementById('resultPerfect'),
+  resultGood: document.getElementById('resultGood'),
+  resultMiss: document.getElementById('resultMiss'),
   playPauseOverlay: document.getElementById('playPauseOverlay'),
   pauseReason: document.getElementById('pauseReason'),
   pauseResumeBtn: document.getElementById('pauseResumeBtn'),
@@ -2111,6 +2091,25 @@ class AudioEngine {
     g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t+.01); g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
     o.connect(f); f.connect(g); g.connect(p); p.connect(this.sfxBus); o.start(t); o.stop(t+dur+.03);
   }
+  tutorialPanPulse(side='left', opts={}){
+    if(!this.ctx) return;
+    const {freq=400, vol=.16, dur=.18, delay=0, type='triangle'} = opts;
+    const t = this.ctx.currentTime + delay;
+    const o = this.ctx.createOscillator();
+    const g = this.ctx.createGain();
+    const p = this.ctx.createStereoPanner();
+    o.type = type;
+    o.frequency.value = freq;
+    p.pan.value = side === 'right' ? 0.95 : -0.95;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + .01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g);
+    g.connect(p);
+    p.connect(this.sfxBus);
+    o.start(t);
+    o.stop(t + dur + .03);
+  }
 }
 const audio = new AudioEngine();
 loadAudioSettings();
@@ -2364,10 +2363,17 @@ function createPlayState(levelIndex){
     statusText:'準備中',
     phase: level.idx===0?'listen':'play',
     listenBeats:16,
+    tutorialBeatCount:0,
+    tutorialPhaseBeat:0,
+    tutorialChannelBeats:4,
+    tutorialSide:'',
     goodCount:0,
-    practiceHits:0,
-    practiceNeeded:8,
-    practiceWindow:8,
+    consecutiveGood:0,
+    perfectCount:0,
+    goodJudgeCount:0,
+    missCount:0,
+    practiceNeeded:6,
+    practiceWindow:6,
     recoveredHits:0,
     continuousMiss:0,
     decoyCooldownUntil:0,
@@ -2395,10 +2401,8 @@ function createPlayState(levelIndex){
     pressureGrace: level.idx===3 ? 6.5 : 0,
     pressureStarted:false,
     tutorialNodes:[
-      {x:820,z:0,r:180,label:'聽拍起點'},
-      {x:1500,z:0,r:180,label:'第一段前進'},
-      {x:2220,z:0,r:180,label:'第二段前進'},
-      {x:3000,z:0,r:180,label:'第三段前進'}
+      {x:0,z:0,r:180,label:'聽拍起點'},
+      {x:1150,z:0,r:190,label:'最終音源'}
     ],
     tutorialMissHintShown:false,
     tutorialRecoverHintShown:false,
@@ -2422,11 +2426,23 @@ function constrainToCircle(x,z){
   const d = Math.hypot(x,z); if(d<=MAP_RADIUS) return {x,z};
   const a = Math.atan2(z,x); return {x: Math.cos(a)*MAP_RADIUS, z: Math.sin(a)*MAP_RADIUS};
 }
+function tutorialRelativeSource(ps, side, distance=720){
+  const angle = ps.player.angle + (side==='left' ? -Math.PI/2 : Math.PI/2);
+  return {
+    x: ps.player.x + Math.cos(angle) * distance,
+    z: ps.player.z + Math.sin(angle) * distance
+  };
+}
 function initLevelTargets(ps){
   if(ps.idx===0){
-    ps.target = {...ps.tutorialNodes[0]};
+    ps.target = {...ps.tutorialNodes[1]};
     ps.player.angle = 0;
+    ps.phase = 'listen';
     ps.statusText = '先聽 16 拍';
+    ps.tutorialBeatCount = 0;
+    ps.tutorialPhaseBeat = 0;
+    ps.tutorialChannelBeats = 8;
+    ps.tutorialSide = '';
     return;
   }
   ps.target = {...pickRandomTargetFar(ps.player), r:230};
@@ -2530,10 +2546,11 @@ function updatePlayHUD(force=false){
   el.hudSub.textContent = `${ps.level.bpm} BPM`;
   let objective = ps.objective;
   if(ps.idx===0){
-    if(ps.phase==='listen') objective = '先不要移動，先把 16 拍聽進身體。';
-    else if(ps.phase==='practice') objective = `原地跟拍 ${ps.goodCount} / ${ps.practiceNeeded}，Good 以上才算。`;
-    else if(ps.phase==='recover') objective = '剛剛偏了，先穩回 4 次正拍再繼續。';
-    else objective = `節拍前進 ${ps.collected} / ${ps.collectGoal}，一路對拍直走。`;
+    if(ps.phase==='listen') objective = `第一階段：原地聽拍 ${Math.min(ps.tutorialBeatCount, ps.listenBeats)} / ${ps.listenBeats}`;
+    else if(ps.phase==='channel_left') objective = `第二階段：左邊音源示範 ${Math.min(ps.tutorialPhaseBeat, ps.tutorialChannelBeats)} / ${ps.tutorialChannelBeats}`;
+    else if(ps.phase==='channel_right') objective = `第二階段：右邊音源示範 ${Math.min(ps.tutorialPhaseBeat, ps.tutorialChannelBeats)} / ${ps.tutorialChannelBeats}`;
+    else if(ps.phase==='practice') objective = `第三階段：連續 GOOD 以上 ${ps.consecutiveGood} / ${ps.practiceNeeded}`;
+    else objective = '第四階段：跟著節拍前進，接觸音源完成教學';
   } else if(ps.idx===1){
     objective = '一邊踩拍，一邊朝真正聲音的方向修正。';
   } else if(ps.idx===2){
@@ -2547,7 +2564,7 @@ function updatePlayHUD(force=false){
   const pct = clamp(ps.sync, 0, 1);
   el.syncFill.style.width = `${pct*100}%`;
   el.syncFill.style.background = pct>.6 ? 'linear-gradient(90deg,#5ab7ff,#00ff88)' : pct>.3 ? 'linear-gradient(90deg,#8cc7ff,#ffc36a)' : 'linear-gradient(90deg,#ff7a93,#ffbf75)';
-  if(ps.idx===0) el.hudHint.textContent = 'Space 跟拍 / 正拍才會前進 / Esc 中斷';
+  if(ps.idx===0) el.hudHint.textContent = ps.phase==='move' ? 'Space 踩在拍上才會前進 / 接觸音源通關 / Esc 中斷' : '現在先照提示學習 / Space 可試拍 / Esc 中斷';
   else if(ps.idx===1) el.hudHint.textContent = '滑鼠轉向 / Space 踏步 / 先聽方向，再前進';
   else if(ps.idx===2) el.hudHint.textContent = '真音源較穩、假回聲較飄 / Space 踏步 / Esc 中斷';
   else if(ps.idx===3) el.hudHint.textContent = '壓力會逐步加強 / Space 踏步 / Esc 中斷';
@@ -2566,7 +2583,44 @@ function pulseLevelAudio(ps){
   if(beat === ps.pulseBeat) return;
   ps.pulseBeat = beat;
   const strong = beat % 4 === 0;
-  if(ps.idx===0){ audio.metronome(strong); if(ps.phase==='listen' && beat >= ps.listenBeats){ ps.phase='practice'; ps.statusText='開始跟拍'; updatePlayHUD(); } return; }
+  if(ps.idx===0){
+    ps.tutorialBeatCount = beat + 1;
+    if(ps.phase==='listen'){
+      audio.metronome(strong);
+      ps.statusText = `先不要移動，先聽拍 ${Math.min(ps.tutorialBeatCount, ps.listenBeats)} / ${ps.listenBeats}`;
+      if(ps.tutorialBeatCount >= ps.listenBeats){
+        ps.phase = 'channel_left';
+        ps.tutorialPhaseBeat = 0;
+        ps.tutorialSide = 'left';
+        ps.statusText = '這是左邊的音源';
+        updatePlayHUD();
+      }
+    } else if(ps.phase==='channel_left'){
+      audio.tutorialPanPulse('left', {freq:strong ? 1720 : 1380, vol:.34, dur:strong ? .12 : .09, type:'square'});
+      ps.tutorialPhaseBeat++;
+      ps.statusText = `這是左邊的音源 ${Math.min(ps.tutorialPhaseBeat, ps.tutorialChannelBeats)} / ${ps.tutorialChannelBeats}`;
+      if(ps.tutorialPhaseBeat >= ps.tutorialChannelBeats){
+        ps.phase = 'channel_right';
+        ps.tutorialPhaseBeat = 0;
+        ps.tutorialSide = 'right';
+        ps.statusText = '這是右邊的音源';
+        updatePlayHUD();
+      }
+    } else if(ps.phase==='channel_right'){
+      audio.tutorialPanPulse('right', {freq:strong ? 1720 : 1380, vol:.34, dur:strong ? .12 : .09, type:'square'});
+      ps.tutorialPhaseBeat++;
+      ps.statusText = `這是右邊的音源 ${Math.min(ps.tutorialPhaseBeat, ps.tutorialChannelBeats)} / ${ps.tutorialChannelBeats}`;
+      if(ps.tutorialPhaseBeat >= ps.tutorialChannelBeats){
+        ps.phase = 'practice';
+        ps.consecutiveGood = 0;
+        ps.statusText = '現在原地穩定打出 GOOD 以上';
+        updatePlayHUD();
+      }
+    } else {
+      audio.metronome(strong);
+    }
+    return;
+  }
   const d = dist(ps.player.x, ps.player.z, ps.target.x, ps.target.z);
   const prox = 1 - clamp(d / (MAP_RADIUS * 1.2), 0, 1);
   const cutoff = lerp(600, 18000, Math.pow(prox, .7));
@@ -2697,10 +2751,11 @@ function updateLevelSystems(ps, dt){
   if(ps.sync <= 0 && ps.idx!==0){ ps.failReason = ps.level.kind==='pressure' || ps.level.kind==='highpressure' ? '壓力吞掉了你的節拍' : '同步崩潰'; return finishLevel(false); }
 
   if(ps.idx===0){
-    if(ps.phase==='listen') ps.statusText='先聽 16 拍，先別急著動';
-    if(ps.phase==='practice') ps.statusText=`原地跟拍 ${ps.goodCount} / ${ps.practiceNeeded}`;
-    if(ps.phase==='recover') ps.statusText='節拍亂了，先穩回 4 次正拍';
-    if(ps.phase==='move') ps.statusText=`教學進度 ${ps.collected} / ${ps.collectGoal}`;
+    if(ps.phase==='listen') ps.statusText = `先不要移動，先聽拍 ${Math.min(ps.tutorialBeatCount, ps.listenBeats)} / ${ps.listenBeats}`;
+    if(ps.phase==='channel_left') ps.statusText = '這是左邊的音源';
+    if(ps.phase==='channel_right') ps.statusText = '這是右邊的音源';
+    if(ps.phase==='practice') ps.statusText = `穩定 GOOD 以上 ${ps.consecutiveGood} / ${ps.practiceNeeded}`;
+    if(ps.phase==='move') ps.statusText = '現在跟著節拍前進，接觸音源通關';
     cutoff = 18000; gain = 0;
   }
 
@@ -2748,9 +2803,7 @@ function updateLevelSystems(ps, dt){
     ps.successMemory = ps.level.idx===1 ? '你真的靠聽音找到了路。' : ps.level.idx===2 ? '你看穿了假回聲。' : ps.level.idx===3 ? '你在壓力裡穩住了。' : '';
     if(ps.collected >= ps.collectGoal){ return finishLevel(true); }
     if(ps.idx===0){
-      const nextNode = ps.tutorialNodes[Math.min(ps.collected, ps.tutorialNodes.length-1)];
-      ps.target = {...nextNode};
-      ps.statusText=`教學進度 ${ps.collected} / ${ps.collectGoal}`;
+      ps.statusText = '你已接觸音源，完成教學';
     } else {
       ps.target = {...pickRandomTargetFar(ps.player), r: ps.target.r};
       ps.lastDistance = dist(ps.player.x, ps.player.z, ps.target.x, ps.target.z);
@@ -2776,21 +2829,24 @@ function judgeTap(){
   else if(abs <= .14) result='GOOD';
   else if(abs <= .22) result='LATE';
   if(result==='MISS' || result==='LATE'){
+    ps.missCount++;
     ps.sync = clamp(ps.sync - (result==='MISS' ? .14 : .08), 0, 1);
     ps.continuousMiss++;
     audio.duck();
     const missLabel = result==='LATE' ? (delta < 0 ? 'EARLY' : 'LATE') : 'MISS';
     showJudge(missLabel, '#ff7b94', false);
     if(ps.idx===0){
-      if(!ps.tutorialMissHintShown){
-        ps.tutorialMissHintShown = true;
-        ps.statusText = delta < 0 ? '太早了，先等拍點落下' : '太晚了，跟著拍點一起按';
-      }
-      if(ps.continuousMiss >= 3 || ps.sync<=0){
-        ps.phase='recover';
-        ps.recoveredHits=0;
-        ps.statusText='先穩住拍子，再回到路徑';
-        ps.tutorialRecoverHintShown = true;
+      if(ps.phase==='listen'){
+        ps.statusText = '第一階段先聽，不用急著按';
+      } else if(ps.phase==='channel_left'){
+        ps.statusText = '先記住左邊的音源位置';
+      } else if(ps.phase==='channel_right'){
+        ps.statusText = '先記住右邊的音源位置';
+      } else if(ps.phase==='practice'){
+        ps.consecutiveGood = 0;
+        ps.statusText = delta < 0 ? '太早了，連續 GOOD 歸零，跟著拍點再試一次' : '太晚了，連續 GOOD 歸零，跟著拍點再試一次';
+      } else if(ps.phase==='move'){
+        ps.statusText = '拍點偏了，重新穩住再前進';
       }
     } else if(ps.idx===1){
       ps.statusText = '你有踩拍，但時機偏了，先穩回節拍';
@@ -2802,22 +2858,34 @@ function judgeTap(){
     updatePlayHUD(); return;
   }
   ps.continuousMiss = 0;
+  if(result==='PERFECT') ps.perfectCount++; else ps.goodJudgeCount++;
   ps.sync = clamp(ps.sync + (result==='PERFECT'?.09:.06), 0, 1);
   showJudge(result, result==='PERFECT' ? '#9feeff' : '#8fffc1', true);
   if(ps.idx===0){
-    if(ps.phase==='practice'){
+    if(ps.phase==='listen'){
+      ps.statusText = '先聽 16 拍，現在還不用按';
+      updatePlayHUD();
+      return;
+    } else if(ps.phase==='channel_left'){
+      ps.statusText = '這是左邊的音源';
+      updatePlayHUD();
+      return;
+    } else if(ps.phase==='channel_right'){
+      ps.statusText = '這是右邊的音源';
+      updatePlayHUD();
+      return;
+    } else if(ps.phase==='practice'){
       ps.goodCount++;
       ps.practiceHits++;
-      if(ps.goodCount >= ps.practiceNeeded){
+      ps.consecutiveGood++;
+      ps.statusText = `很好，連續 GOOD 以上 ${ps.consecutiveGood} / ${ps.practiceNeeded}`;
+      if(ps.consecutiveGood >= ps.practiceNeeded){
         ps.phase='move';
-        ps.statusText='很好，現在讓節拍帶你前進';
-      }
-    } else if(ps.phase==='recover'){
-      ps.recoveredHits++;
-      if(ps.recoveredHits >= 4){
-        ps.phase='move';
-        ps.statusText='穩住了，重新解鎖前進';
-        ps.sync = .7;
+        ps.statusText='很好，現在跟著節拍前進並接觸音源';
+        ps.sync = Math.max(ps.sync, .78);
+      } else {
+        updatePlayHUD();
+        return;
       }
     } else if(ps.phase!=='move'){
       updatePlayHUD();
@@ -2848,7 +2916,7 @@ function showJudge(label, color, step){
 }
 function flashTransition(){ el.transitionFlash.classList.add('show'); clearTimeout(flashTransition._t); flashTransition._t=setTimeout(()=>el.transitionFlash.classList.remove('show'), 260); }
 function openResult(success){
-  const ps = app.play; if(!ps || ps.finished) return;
+  const ps = app.play; if(!ps) return;
   ps.finished = true;
   const syncPct = `${Math.round(clamp(ps.sync,0,1)*100)}%`;
   app.result = { success, levelIndex: ps.idx };
@@ -2861,7 +2929,9 @@ function openResult(success){
   el.resultBpm.textContent = `${ps.level.bpm}`;
   el.resultProgress.textContent = `${ps.collected} / ${ps.collectGoal}`;
   el.resultSync.textContent = syncPct;
-  el.resultState.textContent = success ? '穩定通關' : failReason;
+  el.resultPerfect.textContent = `${ps.perfectCount || 0}`;
+  el.resultGood.textContent = `${ps.goodJudgeCount || 0}`;
+  el.resultMiss.textContent = `${ps.missCount || 0}`;
   el.resultPrimaryBtn.textContent = success ? (ps.idx < LEVELS.length-1 ? `下一關` : '重玩最終關') : '重試關卡';
   audio.stopMusic();
   document.exitPointerLock?.();
@@ -2873,7 +2943,7 @@ function finishLevel(success){
   document.body.classList.remove('play-mode');
   if(el.playPauseOverlay){ el.playPauseOverlay.classList.remove('show'); el.playPauseOverlay.setAttribute('aria-hidden','true'); }
   if(success){
-    if(ps.idx===0) ps.successMemory = '你已經抓到 Blind Beat 的第一個核心：先聽、再拍、再前進。';
+    if(ps.idx===0) ps.successMemory = '你已完成第 0 關四階段教學：先聽拍、分辨左右、穩定 GOOD、接觸音源。';
     if(ps.idx===1) ps.successMemory ||= '你真的只靠聲音在黑暗中找到了路。';
     if(ps.idx===2) ps.successMemory ||= '你看穿了陷阱，第一次學會不立刻相信耳朵。';
     if(ps.idx===3) ps.successMemory ||= '在壓力開始逼近時，你仍然穩住了節拍。';
